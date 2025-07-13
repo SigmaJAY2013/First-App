@@ -1,34 +1,31 @@
 import streamlit as st
-from datetime import datetime
+import seaborn as sns
+import pandas as pd
 
-st.set_page_config(page_title="Hello Streamlit!", page_icon="👋")
+st.set_page_config(page_title="Penguins Explorer", page_icon="🐧", layout="wide")
 
-# --- Sidebar ---
-st.sidebar.title("About")
-st.sidebar.markdown(
+@st.cache_data
+def load_data() -> pd.DataFrame:
+    """Lazy‑loads Palmer Penguins dataset from seaborn."""
+    return sns.load_dataset("penguins").dropna()
+
+st.title("🐧 Penguins Explorer")
+st.markdown(
     """
-    **This is your first Streamlit app!**
-
-    - Built with pure Python ✨  
-    - Runs for free on the Streamlit Community Cloud  
-    - Ready to fork, edit and deploy  
-    """
-)
-
-# --- Main area ---
-st.title("👋 Hello, World!")
-st.write(
-    """
-    Welcome to your very first Streamlit application.
-
-    - Edit *app.py*, commit, and watch the app update automatically.  
-    - Use the sidebar to add more pages or controls.  
+    Dive into the **Palmer Penguins** dataset!
+    Use the sidebar (left) to jump between pages:
+    1. **Data Explorer** – browse & filter the raw table  
+    2. **Interactive Charts** – visualize bill & flipper metrics  
+    3. **Predict Species** – tiny ML demo in real time  
     """
 )
 
-name = st.text_input("What’s your name?")
-if name:
-    st.success(f"Nice to meet you, **{name}**!")
+with st.expander("About this project", expanded=False):
+    st.write(
+        "Built with Streamlit, Altair, pandas, seaborn and scikit‑learn. "
+        "Deployed free on Streamlit Community Cloud."
+    )
 
-st.markdown("---")
-st.caption(f"Rendered at {datetime.utcnow():%Y‑%m‑%d %H:%M UTC}")
+# A fun Easter egg 🥚
+if st.button("Show me a random penguin fact!"):
+    st.info("Adélie penguins breed in colonies that can reach **250,000+** individuals.")
